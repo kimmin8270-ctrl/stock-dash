@@ -1,0 +1,411 @@
+{
+  "schema_version": 1,
+  "reports": [
+    {
+      "code": "086450",
+      "name": "동국제약",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "코드 086450으로 확인. 2026년 2분기 매출 2,589억원(+10.9%), 영업이익 261억원(+17.8%)이며 상반기 매출 5,099억원(+11.5%), 영업이익 534억원(+12.6%)입니다. 헬스케어·화장품 수출이 성장의 주요 축으로 확인됩니다.",
+        "source": "https://www.dkpharm.co.kr/ir/dart.php"
+      },
+      "business": {
+        "text": "의약품 제조·판매가 핵심이며 인사돌·마데카솔·오라메디·훼라민큐 등 일반의약품과 전문의약품, 헬스케어/화장품 사업을 함께 영위합니다. 2026년 2분기에는 헬스케어 매출과 화장품 수출 확대가 두드러졌습니다.",
+        "source": "https://www.dkpharm.co.kr/ir/dart.php"
+      },
+      "financial": {
+        "period": "2026-06",
+        "prior_period": "2025-06",
+        "basis": "연결",
+        "currency": "KRW",
+        "unit": "억원",
+        "revenue": 5099.13,
+        "prior_revenue": 4571.97,
+        "operating_profit": 534.3,
+        "prior_operating_profit": 474.59,
+        "source": "https://www.dkpharm.co.kr/ir/dart.php"
+      },
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-18",
+        "unit": "주",
+        "foreign": -1593001,
+        "institution": 1566380,
+        "source": "https://alphasquare.co.kr/home/stock-summary?code=086450"
+      },
+      "valuation": {
+        "low": 27000,
+        "base": 30000,
+        "high": 33000,
+        "current_price": 21050,
+        "price_date": "2026-09-18",
+        "method": "2026-09-17 공개 목표주가 30,000원을 기준값으로 두고 ±10% 민감도 범위를 표시한 참고값입니다. 회사 실적·자본구조를 직접 DCF로 재평가한 값은 아닙니다.",
+        "source": "https://markets.hankyung.com/stock/086450/consensus"
+      },
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준이며 KRX 개별종목 원문 URL은 이번 조사에서 직접 확보하지 못했습니다.",
+        "수정주가 일봉 20·60일 및 완료 주봉 10·20주 계산에 필요한 61거래일·21완료주 원자료가 이번 조사에서 확보되지 않아 prices=null입니다.",
+        "경쟁사 영업이익 순위는 같은 기간·회계기준의 개별 원문 URL을 모두 확보하지 못해 peers=null입니다."
+      ]
+    },
+    {
+      "code": "000080",
+      "name": "하이트진로",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "2026년 2분기 매출 6,186억원(-4.3%), 영업이익 649억원(+0.7%). 상반기 연결 기준 매출은 전년 동기 대비 4.0% 감소, 영업이익은 5.0% 감소했습니다.",
+        "source": "https://www.hitejinro.com/"
+      },
+      "business": {
+        "text": "맥주·소주·생수·기타 사업을 영위하며 맥주와 소주가 매출의 상당 부분을 차지합니다. 대표 브랜드로 테라·켈리·참이슬·진로가 있습니다.",
+        "source": "https://www.hitejinro.com/"
+      },
+      "financial": null,
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-17",
+        "unit": "주",
+        "foreign": 763263,
+        "institution": 37946,
+        "source": "https://alphasquare.co.kr/home/stock-summary?code=000080"
+      },
+      "valuation": null,
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "2026-06 누적 매출·영업이익 절대액의 공식 반기보고서 원문을 이번 조사에서 직접 추출하지 못해 financial=null입니다.",
+        "적정주가의 재현 가능한 공식/증권사 목표가 범위를 확인하지 못해 valuation=null입니다.",
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준이며 KRX 개별종목 원문 URL은 이번 조사에서 직접 확보하지 못했습니다.",
+        "수정주가 일봉 20·60일 및 완료 주봉 10·20주 원자료 미확보로 prices=null입니다.",
+        "경쟁사 영업이익 순위의 개별 원문 자료 미확보로 peers=null입니다."
+      ]
+    },
+    {
+      "code": "000100",
+      "name": "유한양행",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "2026년 2분기 매출 6,140억원(+10.4%), 영업이익 614억원(+34.7%). 상반기 매출 1조1,662.32억원(+8.94%), 영업이익 756.84억원(+34.48%)입니다.",
+        "source": "https://yuhan.co.kr/Invest/IR/Event/"
+      },
+      "business": {
+        "text": "의약품 제조·판매를 중심으로 전문의약품, 생활건강 제품과 원료의약품 등을 영위하며 신약 R&D와 글로벌 라이선스 사업도 병행합니다.",
+        "source": "https://yuhan.co.kr/Invest/IR/Event/"
+      },
+      "financial": {
+        "period": "2026-06",
+        "prior_period": "2025-06",
+        "basis": "연결",
+        "currency": "KRW",
+        "unit": "억원",
+        "revenue": 11662.32,
+        "prior_revenue": 10705.51,
+        "operating_profit": 756.84,
+        "prior_operating_profit": 562.81,
+        "source": "https://yuhan.co.kr/Invest/IR/Event/"
+      },
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-17",
+        "unit": "주",
+        "foreign": -177249,
+        "institution": 297053,
+        "source": "https://alphasquare.co.kr/home/stock-summary?code=000100"
+      },
+      "valuation": {
+        "low": 139875,
+        "base": 155417,
+        "high": 170959,
+        "current_price": 75900,
+        "price_date": "2026-09-18",
+        "method": "2026-09-17 공개 목표주가 155,417원을 기준값으로 두고 ±10% 민감도 범위를 표시한 참고값입니다.",
+        "source": "https://markets.hankyung.com/stock/000100/consensus"
+      },
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준이며 KRX 개별종목 원문 URL은 이번 조사에서 직접 확보하지 못했습니다.",
+        "수정주가 61거래일·21완료주 원자료가 없어 prices=null입니다.",
+        "경쟁사 개별 원문 URL을 모두 확보하지 못해 peers=null입니다."
+      ]
+    },
+    {
+      "code": "002390",
+      "name": "한독",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "2026년 2분기 매출 1,371.19억원(+9.44%), 영업이익 26.32억원으로 흑자전환. 상반기 매출 2,686.44억원(+10.22%), 영업이익 28.39억원으로 전년 상반기 영업손실 21.98억원에서 흑자전환했습니다.",
+        "source": "https://handok.co.kr/board/irView?idx=4602"
+      },
+      "business": {
+        "text": "전문의약품 중심 제약사로 자체 제품과 도입품목을 판매하며 희귀질환·항암 등 치료제 포트폴리오와 디지털 헬스케어 사업을 확대하고 있습니다.",
+        "source": "https://handok.co.kr/board/irView?idx=4602"
+      },
+      "financial": {
+        "period": "2026-06",
+        "prior_period": "2025-06",
+        "basis": "연결",
+        "currency": "KRW",
+        "unit": "억원",
+        "revenue": 2686.44,
+        "prior_revenue": 2437.24,
+        "operating_profit": 28.39,
+        "prior_operating_profit": -21.98,
+        "source": "https://handok.co.kr/board/irView?idx=4602"
+      },
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-17",
+        "unit": "주",
+        "foreign": 4272,
+        "institution": -170517,
+        "source": "https://alphasquare.co.kr/home/stock-summary?code=002390"
+      },
+      "valuation": null,
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "적정주가의 재현 가능한 공식/증권사 목표가 범위를 확인하지 못해 valuation=null입니다.",
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준이며 KRX 개별종목 원문 URL은 이번 조사에서 직접 확보하지 못했습니다.",
+        "수정주가 원자료 부족으로 prices=null입니다.",
+        "경쟁사 개별 원문 URL을 모두 확보하지 못해 peers=null입니다."
+      ]
+    },
+    {
+      "code": "009290",
+      "name": "광동제약",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "2026년 2분기 매출 4,398억원(+3.4%), 영업이익 28억원(-37.8%). 상반기 연결 기준 매출은 전년 동기 대비 6.0% 증가, 영업이익은 31.8% 증가했습니다.",
+        "source": "https://www.ekdp.com/"
+      },
+      "business": {
+        "text": "약국사업의 쌍화탕·우황청심원, ETC 전문의약품, F&B의 비타500·옥수수수염차·헛개차·삼다수 등이 핵심이며 건강기능식품 OEM/ODM과 체외진단 사업도 영위합니다.",
+        "source": "https://www.ekdp.com/"
+      },
+      "financial": null,
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-18",
+        "unit": "주",
+        "foreign": -412687,
+        "institution": 9438,
+        "source": "https://alphasquare.co.kr/home/stock-summary?code=009290"
+      },
+      "valuation": null,
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "2026-06 누적 절대 금액을 공식 반기보고서 원문에서 직접 검증하지 못해 financial=null입니다.",
+        "적정주가 자료 미확보로 valuation=null입니다.",
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준입니다.",
+        "수정주가 원자료 부족으로 prices=null입니다.",
+        "경쟁사 개별 원문 URL을 모두 확보하지 못해 peers=null입니다."
+      ]
+    },
+    {
+      "code": "022100",
+      "name": "포스코DX",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "2026년 2분기 매출 2,326억원(-14.8%), 영업이익 99억원(-42.3%). 상반기 연결 매출 4,741억원, 영업이익 135억원으로 전년 동기 대비 각각 16.8%, 66.2% 감소했습니다.",
+        "source": "https://www.poscodx.com/kor/ir/irData.do"
+      },
+      "business": {
+        "text": "IT와 OT 융합을 기반으로 철강·이차전지소재 자동화와 IT서비스를 제공하며 AI·로봇·스마트팩토리 중심의 AI Native Company 전환을 추진합니다.",
+        "source": "https://www.poscodx.com/kor/ir/irData.do"
+      },
+      "financial": null,
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-18",
+        "unit": "주",
+        "foreign": -144082,
+        "institution": 9553691,
+        "source": "https://alphasquare.co.kr/home/stock-summary?code=022100"
+      },
+      "valuation": null,
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "2026-06 누적 전년 비교 절대 금액을 이번 조사에서 공식 반기보고서 원문으로 직접 검증하지 못해 financial=null입니다.",
+        "적정주가 자료 미확보로 valuation=null입니다.",
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준입니다.",
+        "수정주가 원자료 부족으로 prices=null입니다.",
+        "경쟁사 개별 원문 URL을 모두 확보하지 못해 peers=null입니다."
+      ]
+    },
+    {
+      "code": "042660",
+      "name": "한화오션",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "2026년 2분기 매출 5조4,432억원(+65.2%), 영업이익 7,361억원(+98.0%). 상반기 연결 기준 매출은 전년 동기 대비 34.4% 증가, 영업이익은 86.8% 증가했습니다.",
+        "source": "https://www.hanwhaocean.com/"
+      },
+      "business": {
+        "text": "LNG·원유·컨테이너·LPG 운반선 등 상선, 해양플랜트와 에너지플랜트, 잠수함·구축함 등 특수선을 건조하는 종합 조선·해양 기업입니다.",
+        "source": "https://www.hanwhaocean.com/"
+      },
+      "financial": null,
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-18",
+        "unit": "주",
+        "foreign": 414288,
+        "institution": -599769,
+        "source": "https://alphasquare.co.kr/home/stock-summary?code=042660"
+      },
+      "valuation": {
+        "low": 141707,
+        "base": 157452,
+        "high": 173197,
+        "current_price": 82900,
+        "price_date": "2026-09-18",
+        "method": "2026-09-17 공개 목표주가 157,452원을 기준값으로 두고 ±10% 민감도 범위를 표시한 참고값입니다.",
+        "source": "https://markets.hankyung.com/stock/042660/consensus"
+      },
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "2026-06 누적 절대 금액을 공식 반기보고서 원문에서 직접 추출하지 못해 financial=null입니다.",
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준입니다.",
+        "수정주가 61거래일·21완료주 원자료 미확보로 prices=null입니다.",
+        "경쟁사 영업이익 순위의 개별 원문 URL 미확보로 peers=null입니다."
+      ]
+    },
+    {
+      "code": "207940",
+      "name": "삼성바이오로직스",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "2026년 2분기 매출 1조3,209억원(+30%), 영업이익 5,864억원(+23%). 상반기 매출 2조5,780억원(+28%), 영업이익 1조1,672억원(+29%)입니다.",
+        "source": "https://samsungbiologics.com/kr/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+      },
+      "business": {
+        "text": "바이오의약품 CMO·CDO를 핵심으로 대형 생산시설을 운영하며 항체의약품을 중심으로 mRNA·ADC 등 신규 모달리티 생산과 글로벌 사업을 확대하고 있습니다.",
+        "source": "https://samsungbiologics.com/kr/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+      },
+      "financial": {
+        "period": "2026-06",
+        "prior_period": "2025-06",
+        "basis": "연결",
+        "currency": "KRW",
+        "unit": "억원",
+        "revenue": 25780,
+        "prior_revenue": 20138,
+        "operating_profit": 11672,
+        "prior_operating_profit": 9074,
+        "source": "https://samsungbiologics.com/kr/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+      },
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-18",
+        "unit": "주",
+        "foreign": 249272,
+        "institution": 96504,
+        "source": "https://alphasquare.co.kr/home/stock-information?code=207940&issue-type=disclosure"
+      },
+      "valuation": {
+        "low": 1827000,
+        "base": 2030000,
+        "high": 2233000,
+        "current_price": 1398000,
+        "price_date": "2026-09-18",
+        "method": "2026-09-17 공개 목표주가 2,030,000원을 기준값으로 두고 ±10% 민감도 범위를 표시한 참고값입니다.",
+        "source": "https://markets.hankyung.com/stock/207940/consensus"
+      },
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준입니다.",
+        "수정주가 원자료 부족으로 prices=null입니다.",
+        "경쟁사 영업이익 순위는 동일 사업모델·동일 기간의 개별 원문 URL 미확보로 peers=null입니다."
+      ]
+    },
+    {
+      "code": "299660",
+      "name": "셀리드",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "2026년 2분기 매출 20.7억원(-3.0%), 영업손실 25.0억원으로 적자가 지속되었습니다. 상반기 매출 52.8억원(+42.7%), 영업손실 41.2억원으로 전년 영업손실 51.2억원 대비 19.5% 축소되었습니다.",
+        "source": "https://kind.krx.co.kr/common/disclsviewer.do?acptno=20260814003594&method=search"
+      },
+      "business": {
+        "text": "항암면역치료백신과 COVID-19 백신을 개발하고 자체 GMP시설을 활용한 CMO/CDMO 사업을 추진하며, 2024년 흡수합병한 이커머스 사업도 매출원으로 보유합니다.",
+        "source": "https://www.cellid.co.kr/"
+      },
+      "financial": {
+        "period": "2026-06",
+        "prior_period": "2025-06",
+        "basis": "별도",
+        "currency": "KRW",
+        "unit": "억원",
+        "revenue": 52.8,
+        "prior_revenue": 37.0,
+        "operating_profit": -41.2,
+        "prior_operating_profit": -51.2,
+        "source": "https://kind.krx.co.kr/common/disclsviewer.do?acptno=20260814003594&method=search"
+      },
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-18",
+        "unit": "주",
+        "foreign": -362447,
+        "institution": -1081,
+        "source": "https://alphasquare.co.kr/home/stock-summary?code=299660"
+      },
+      "valuation": null,
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "적정주가 자료 미확보로 valuation=null입니다.",
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준입니다.",
+        "수정주가 원자료 부족으로 prices=null입니다.",
+        "경쟁사 개별 원문 URL 미확보로 peers=null입니다."
+      ]
+    },
+    {
+      "code": "397030",
+      "name": "에이프릴바이오",
+      "as_of": "2026-09-18",
+      "summary": {
+        "text": "2026년 2분기 매출 0원, 영업손실 29.15억원입니다. 상반기 매출은 전년 동기 대비 66.6% 감소했고 영업손실은 84.6% 확대되었습니다. 기술이전·마일스톤 인식 시점에 따라 실적 변동성이 큰 연구개발형 바이오 기업입니다.",
+        "source": "https://www.aprilbio.com/"
+      },
+      "business": {
+        "text": "항체라이브러리와 SAFA 플랫폼을 기반으로 신약 후보물질을 개발하고 글로벌 기술이전을 통해 수익을 창출하는 연구개발 중심 기업입니다.",
+        "source": "https://www.aprilbio.com/"
+      },
+      "financial": null,
+      "flow": {
+        "start": "2026-08-21",
+        "end": "2026-09-18",
+        "unit": "주",
+        "foreign": -72174,
+        "institution": -5029,
+        "source": "https://alphasquare.co.kr/home/stock-summary?code=397030"
+      },
+      "valuation": {
+        "low": 54000,
+        "base": 60000,
+        "high": 66000,
+        "current_price": 18140,
+        "price_date": "2026-09-18",
+        "method": "2026-08-24 공개된 단일 증권사 목표주가 60,000원을 기준값으로 두고 ±10% 민감도 범위를 표시한 참고값입니다. 회사의 DCF 산출값이 아닙니다.",
+        "source": "https://comp.wisereport.co.kr/company/c1010001.aspx?cmp_cd=397030&cn="
+      },
+      "prices": null,
+      "peers": null,
+      "data_gaps": [
+        "2026-06 누적 절대 금액을 공식 반기보고서 원문에서 직접 추출하지 못해 financial=null입니다.",
+        "적정주가는 단일 공개 목표주가 기반의 민감도 참고값이며 회사의 DCF 산출값이 아닙니다.",
+        "수급 값은 KRX 제공 데이터를 재게시한 공개 시세 페이지 기준입니다.",
+        "수정주가 원자료 부족으로 prices=null입니다.",
+        "경쟁사 개별 원문 URL 미확보로 peers=null입니다."
+      ]
+    }
+  ]
+}
