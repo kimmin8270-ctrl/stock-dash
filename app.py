@@ -236,11 +236,11 @@ if latest:
 if st.session_state.get("force_nav"):
     st.session_state.nav_choice = st.session_state.pop("force_nav")
 
-NAV_ITEMS = ["내 종목", "계좌 연결", "교육자료", "설정"]
-legacy = {"통합 분석":"내 종목", "홈":"내 종목", "AI 인사이트":"내 종목", "관심 종목":"내 종목", "포트폴리오":"계좌 연결"}
-current = st.session_state.get("nav_choice", "내 종목")
+NAV_ITEMS = ["대시보드", "내 종목", "계좌 연결", "교육자료", "설정"]
+legacy = {"통합 분석":"내 종목", "홈":"대시보드", "AI 인사이트":"내 종목", "관심 종목":"내 종목", "포트폴리오":"계좌 연결"}
+current = st.session_state.get("nav_choice", "대시보드")
 if current not in NAV_ITEMS:
-    st.session_state.nav_choice = legacy.get(current, "설정")
+    st.session_state.nav_choice = legacy.get(current, "대시보드")
     if current not in legacy:
         st.session_state.advanced_page = current
 
@@ -318,6 +318,81 @@ def global_search():
                 )
                 if st.form_submit_button("이 종목 분석", type="primary"):
                     run_analysis(candidate["code"])
+
+
+
+def render_dashboard():
+    """시안 기반 StockDash 대시보드. 현재는 화면 검증용 샘플 데이터입니다."""
+    st.markdown("""
+<style>
+.sd-wrap{margin-top:-8px}
+.sd-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px}
+.sd-kicker{font-size:11px;font-weight:800;letter-spacing:.12em;color:#2563eb}
+.sd-title{font-size:31px;font-weight:850;letter-spacing:-.05em;margin-top:4px}
+.sd-muted{color:#64748b;font-size:13px}
+.sd-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.sd-card{background:#fff;border:1px solid #e7ebf2;border-radius:15px;padding:18px 19px;box-shadow:0 7px 22px rgba(15,23,42,.035)}
+.sd-label{font-size:12px;color:#64748b;font-weight:700}.sd-value{font-size:24px;font-weight:850;margin-top:7px;letter-spacing:-.035em}.sd-up{color:#059669}.sd-down{color:#dc2626}.sd-note{font-size:11px;color:#94a3b8;margin-top:6px}
+.sd-grid-main{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+.sd-grid-bottom{display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:16px}
+.sd-panel{background:#fff;border:1px solid #e7ebf2;border-radius:15px;padding:19px;box-shadow:0 7px 22px rgba(15,23,42,.03)}
+.sd-panel h3{margin:0 0 14px;font-size:16px}.sd-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eef1f5;font-size:13px}.sd-row:last-child{border-bottom:0}
+.sd-chip{display:inline-block;padding:4px 8px;border-radius:999px;background:#eff6ff;color:#2563eb;font-size:10px;font-weight:800}
+.sd-donut{width:150px;height:150px;border-radius:50%;background:conic-gradient(#2563eb 0 38%,#60a5fa 38% 61%,#10b981 61% 79%,#f59e0b 79% 100%);position:relative;margin:4px auto 16px}
+.sd-donut:after{content:"";position:absolute;inset:30px;background:#fff;border-radius:50%}
+.sd-legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px}.sd-legend span{color:#64748b}.sd-legend b{color:#111827}
+.sd-news{font-size:12px;line-height:1.55}.sd-news strong{display:block;font-size:13px;margin-bottom:2px}.sd-news small{color:#94a3b8}
+@media(max-width:900px){.sd-grid4{grid-template-columns:1fr 1fr}.sd-grid-main,.sd-grid-bottom{grid-template-columns:1fr}}
+</style>
+""", unsafe_allow_html=True)
+
+    st.markdown('<div class="sd-wrap">', unsafe_allow_html=True)
+    st.markdown('<div class="sd-top"><div><div class="sd-kicker">STOCKDASH · PORTFOLIO OS</div><div class="sd-title">안녕하세요. 오늘의 투자 현황입니다.</div><div class="sd-muted">2026년 9월 18일 · 디자인 시안 단계에서는 샘플 데이터로 표시됩니다.</div></div><span class="sd-chip">SAMPLE DATA</span></div>', unsafe_allow_html=True)
+
+    cols = st.columns(4)
+    for col, title, value, change, note in [
+        (cols[0],"보유 자산 총액","₩128,450,000","+4.82%","전일 대비"),
+        (cols[1],"오늘 수익률","+₩1,280,000","+1.01%","평가손익 기준"),
+        (cols[2],"누적 수익률","＋18.64%","+6.21%","연초 대비"),
+        (cols[3],"현금 보유액","₩24,800,000","19.3%","총자산 대비"),
+    ]:
+        with col:
+            card(title,value,f"{change} · {note}")
+
+    left,right = st.columns([2,1])
+    with left:
+        with st.container(border=True):
+            st.subheader("포트폴리오 성과")
+            st.caption("최근 6개월 · 샘플 데이터")
+            chart = pd.DataFrame(
+                {"평가금액":[104.2,108.8,106.5,114.7,121.3,128.45]},
+                index=["4월","5월","6월","7월","8월","9월"],
+            )
+            st.line_chart(chart, height=250)
+    with right:
+        with st.container(border=True):
+            st.subheader("자산 배분")
+            st.markdown('<div class="sd-donut"></div><div class="sd-legend"><div>● <b>삼성전자</b> 38%</div><div>● <b>SK하이닉스</b> 23%</div><div>● <b>현금</b> 21%</div><div>● <b>기타</b> 18%</div></div>', unsafe_allow_html=True)
+
+    a,b,c = st.columns(3)
+    with a:
+        with st.container(border=True):
+            st.subheader("관심 종목")
+            for name,price,pct in [("삼성전자","₩78,400","+2.14%"),("SK하이닉스","₩286,500","+1.72%"),("NAVER","₩241,000","-0.83%"),("현대차","₩231,500","+0.46%")]:
+                st.markdown(f'<div class="sd-row"><span><b>{name}</b><br><span class="sd-muted">샘플 시세</span></span><span style="text-align:right"><b>{price}</b><br><span class="{"sd-up" if pct.startswith("+") else "sd-down"}">{pct}</span></span></div>', unsafe_allow_html=True)
+    with b:
+        with st.container(border=True):
+            st.subheader("시장 현황")
+            for name,val,pct in [("KOSPI","3,184.62","+0.72%"),("KOSDAQ","932.41","+0.38%"),("원/달러","1,384.20","-0.21%"),("거래대금","18.4조","+7.2%")]:
+                st.markdown(f'<div class="sd-row"><span>{name}</span><span><b>{val}</b> <span class="{"sd-up" if pct.startswith("+") else "sd-down"}">{pct}</span></span></div>', unsafe_allow_html=True)
+    with c:
+        with st.container(border=True):
+            st.subheader("최근 뉴스 & 공시")
+            for title,date_text in [("삼성전자, 차세대 메모리 투자 확대","09.18"),("반도체 업종 외국인 수급 개선","09.18"),("기업 실적 시즌 주요 공시 정리","09.17"),("원/달러 환율 변동성 확대","09.17")]:
+                st.markdown(f'<div class="sd-news"><strong>{title}</strong><small>{date_text} · 샘플 뉴스</small></div><hr style="margin:9px 0;border:0;border-top:1px solid #eef1f5">', unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 def render_home():
@@ -717,7 +792,9 @@ def render_placeholder(title, subtitle, required):
                 st.caption(cap)
 
 
-if nav == "내 종목":
+if nav == "대시보드":
+    render_dashboard()
+elif nav == "내 종목":
     render_research(store, state, sample_mode)
 elif nav == "계좌 연결":
     render_portfolio(store, sample_mode)
