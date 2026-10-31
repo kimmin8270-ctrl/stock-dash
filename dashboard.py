@@ -30,7 +30,7 @@ def quote_targets(state):
     targets = dict(REPORT_WATCHLIST)
     for stock in state.get('stocks', []):
         code = str(stock.get('code', ''))
-        if stock.get('kind') == '보유' and re.fullmatch(r'\\d{6}', code):
+        if stock.get('kind') == '보유' and re.fullmatch(r'\d{6}', code):
             targets[code] = stock.get('name') or targets.get(code) or code
     return tuple(sorted(targets.items(), key=lambda item: (item[0] not in REPORT_WATCHLIST, item[1])))
 
