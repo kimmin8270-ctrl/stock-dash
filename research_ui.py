@@ -33,6 +33,28 @@ def render_research(store, state, sample_mode):
                             store.save_stock({'code':identity, 'name':name.strip(), 'kind':known.get('kind','관심')})
                             st.rerun()
                         except Exception: st.error('목록 저장에 실패했습니다. 저장 공간 설정을 확인하세요.')
+    if not sample_mode:
+        with st.expander('관심종목 파일 가져오기'):
+            st.caption('PreDash에서 내보낸 관심종목 JSON을 지원합니다. 기존 종목과 투자일지는 유지하며, 새 코드만 추가합니다.')
+            watch_upload = st.file_uploader('관심종목 JSON 선택', type=['json'], key='watchlist_upload')
+            if watch_upload is not None:
+                try:
+                    from watchlist_import import parse_watchlist, add_watchlist
+                    incoming = parse_watchlist(watch_upload.getvalue())
+                except ValueError as error:
+                    st.error(str(error))
+                else:
+                    st.dataframe(incoming, hide_index=True, use_container_width=True)
+                    if st.button(f'{len(incoming)}개 관심종목 가져오기', key='import_watchlist'):
+                        try:
+                            store.change(lambda data: add_watchlist(data, incoming))
+                        except Exception:
+                            st.error('저장에 실패했습니다. 저장 공간 설정을 확인한 뒤 다시 시도하세요.')
+                        else:
+                            st.session_state['watchlist_import_notice'] = '관심종목을 가져왔습니다. 이미 등록된 코드는 그대로 유지했습니다.'
+                            st.rerun()
+        if st.session_state.get('watchlist_import_notice'):
+            st.success(st.session_state.pop('watchlist_import_notice'))
     research = published()
     for r in state.get('chat_research', []):
         if r['code'] not in research or r['as_of'] >= research[r['code']]['as_of']: research[r['code']] = r
