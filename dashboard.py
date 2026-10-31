@@ -41,6 +41,52 @@ def overview_data(state):
     return rows, sorted(notices, key=lambda n: n.get('date', ''), reverse=True)
 
 
+def latest_notes(state):
+    notes = {}
+    for item in state.get('journal', []):
+        code = item.get('code')
+        if code and item.get('kind') == 'note' and (code not in notes or item.get('at', '') >= notes[code].get('at', '')):
+            notes[code] = item
+    return notes
+
+
+def freshness(value, today, limit):
+    try:
+        day = date.fromisoformat(str(value)[:10])
+    except (ValueError, TypeError):
+        return '확인 필요'
+    age = (today - day).days
+    if age < 0:
+        return '날짜 확인 필요'
+    return f'{age}일 경과 · 갱신 점검' if age > limit else f'{age}일 경과'
+
+
+def review_rows(rows, state, today, price_days, research_days):
+    notes = latest_notes(state)
+    output = []
+    for row in rows:
+        note = notes.get(row['코드'], {})
+        price_status = freshness(row['시세 기준일'], today, price_days)
+        research_status = freshness(row['조사일'], today, research_days)
+        actions = []
+        if note.get('next_review') and note['next_review'] <= today.isoformat():
+            actions.append('투자 근거 재점검')
+        if any(x in price_status for x in ('확인', '점검')):
+            actions.append('시세 기준일 확인')
+        if any(x in research_status for x in ('확인', '점검')):
+            actions.append('조사 자료 갱신')
+        if not row['_research'].get('financial'):
+            actions.append('누적 실적 확인')
+        if not note:
+            actions.append('투자 근거 기록')
+        output.append({'종목': row['종목'], '코드': row['코드'], '확인할 일': ' / '.join(actions) or '예정된 점검 대기',
+                       '시세 상태': price_status, '조사 상태': research_status,
+                       '다음 점검일': note.get('next_review', '미설정'),
+                       '투자 이유': note.get('note', '미기록'),
+                       '재검토 조건': note.get('review_condition', '미기록')})
+    return output
+
+
 def render_dashboard(store, state, sample_mode):
     st.title('내 투자 점검 대시보드')
     st.caption(datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일') + ' · 저장된 자료 기준 · 실시간 시세 아님')
@@ -55,14 +101,39 @@ def render_dashboard(store, state, sample_mode):
     if not rows:
         st.info('왼쪽 내 종목에서 관심 기업을 추가해 주세요. 분석된 자료가 이곳에 표시됩니다.')
         return
-    st.subheader('관심 종목 한눈에 보기')
-    st.caption('실적은 전년 같은 누적 기간 비교입니다. 가격 평가는 가정에 따른 참고값이며 빈칸은 미확인입니다.')
-    st.dataframe(pd.DataFrame([{k: v for k, v in r.items() if not k.startswith('_')} for r in rows]),
-                 hide_index=True, use_container_width=True)
+    today = datetime.now(ZoneInfo('Asia/Seoul')).date()
+    with st.expander('자료 갱신 점검 기준'):
+        st.caption('아래 일수는 사용자가 정하는 점검 기준입니다. 거래일 기준이나 공식 공시 기한이 아니며, 기간 이내라도 최신 자료임을 보장하지 않습니다.')
+        price_days = st.number_input('시세 점검 기준 · 달력일', min_value=1, max_value=365, value=7)
+        research_days = st.number_input('조사 점검 기준 · 달력일', min_value=1, max_value=730, value=90)
+    reviews = review_rows(rows, state, today, price_days, research_days)
+    st.subheader('1. 오늘 확인할 일')
+    st.caption('최신 투자 기록의 점검일과 자료 기준일을 확인합니다. 화면 표시용이며 외부 알림은 발송하지 않습니다.')
+    actions = [{k: x[k] for k in ('종목', '확인할 일', '다음 점검일')} for x in reviews if x['확인할 일'] != '예정된 점검 대기']
+    if actions:
+        st.dataframe(pd.DataFrame(actions), hide_index=True, use_container_width=True)
+    else:
+        st.info('설정한 기준에서 예정된 점검 항목이 없습니다.')
+    st.subheader('2. 자료 갱신 상태')
+    st.dataframe(pd.DataFrame([{k: x[k] for k in ('종목', '시세 상태', '조사 상태')} for x in reviews]), hide_index=True, use_container_width=True)
+    st.subheader('3. 실적 변화')
+    st.caption('전년 같은 누적 기간 비교 · 기간과 회계기준을 확인해 주세요. 연간 실적만 있으면 누적 실적은 확인 필요로 표시합니다.')
+    st.dataframe(pd.DataFrame([{k: x[k] for k in ('종목', '누적 매출 성장', '누적 영업이익 성장', '실적 기간', '조사일')} for x in rows]), hide_index=True, use_container_width=True)
+    st.subheader('4. 가격 평가')
+    st.caption('시세 기준일과 평가 시점이 다를 수 있습니다. 범위·가정·원문은 아래 기업 상세에서 확인하세요.')
+    st.dataframe(pd.DataFrame([{'종목': x['종목'], '기준 종가(원)': x['기준 종가(원)'], '시세 기준일': x['시세 기준일'],
+                               '낮은 범위(원)': (x['_research'].get('valuation') or {}).get('low'),
+                               '기준 참고값(원)': x['가격 평가'],
+                               '높은 범위(원)': (x['_research'].get('valuation') or {}).get('high'),
+                               '평가 가격 기준일': (x['_research'].get('valuation') or {}).get('price_date', '확인 필요')} for x in rows]), hide_index=True, use_container_width=True)
+    st.subheader('5. 내 투자 근거')
+    st.caption('가장 최근에 저장한 기록입니다. 근거의 유효 여부는 실적·공시와 대조해 직접 점검해 주세요.')
+    st.dataframe(pd.DataFrame([{k: x[k] for k in ('종목', '투자 이유', '재검토 조건', '다음 점검일')} for x in reviews]), hide_index=True, use_container_width=True)
+    st.subheader('기업 상세와 기록 수정')
     selected = st.selectbox('점검할 기업', range(len(rows)), format_func=lambda i: rows[i]['종목'] + ' · ' + rows[i]['코드'])
     row = rows[selected]
     r, report, result = row['_research'], row['_report'], row['_result']
-    tabs = st.tabs(['기업 실적', '가격 평가와 근거', '위험 공시', '투자 기록·점검일'])
+    tabs = st.tabs(['기업 실적', '가격 평가와 근거', '공시 제목 점검', '투자 기록·점검일'])
     with tabs[0]:
         business = r.get('business') or {}
         if business:
@@ -118,7 +189,7 @@ def render_dashboard(store, state, sample_mode):
         with st.form('dashboard_journal_' + code):
             reason = st.text_area('투자 이유·기대한 사업 변화')
             condition = st.text_area('다시 검토할 조건·확인할 위험')
-            next_day = st.date_input('다음 점검일', value=date.today())
+            next_day = st.date_input('다음 점검일', value=today)
             if st.form_submit_button('투자 기록 저장', type='primary'):
                 if not reason.strip() and not condition.strip():
                     st.warning('투자 이유나 재검토 조건을 입력해 주세요.')
@@ -136,10 +207,6 @@ def render_dashboard(store, state, sample_mode):
                     st.write(note.get('note', ''))
                     st.write('재검토 조건: ' + note.get('review_condition', '미입력'))
                     st.write('다음 점검: ' + note.get('next_review', '미입력'))
-    due = [n for n in state.get('journal', []) if n.get('next_review') and n['next_review'] <= date.today().isoformat()]
-    if due:
-        st.subheader('점검일이 도래한 기록')
-        st.dataframe(pd.DataFrame([{'종목코드': n['code'], '점검일': n['next_review'], '확인 조건': n.get('review_condition', '')} for n in due]), hide_index=True, use_container_width=True)
     st.caption('수급·수정주가 추세·경쟁사 비교는 왼쪽 내 종목의 상세 조사에서 확인하실 수 있습니다.')
 
 
