@@ -2,6 +2,7 @@
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
+import re
 
 import pandas as pd
 import streamlit as st
@@ -9,6 +10,63 @@ import streamlit as st
 from dashboard_ui import render_decision_dashboard
 from automatic import brief
 from chat_research import published, growth
+from providers import DataError, Official
+
+
+# 리포트 자동 점검 대상. 장중 시세는 네이버증권 원문 링크에서 확인한다.
+REPORT_WATCHLIST = {
+    '005930': '삼성전자', '028050': '삼성E&A', '000660': 'SK하이닉스',
+    '353200': '대덕전자', '207940': '삼성바이오로직스', '010120': 'LS ELECTRIC',
+    '086450': '동국제약', '128940': '한미약품',
+}
+
+
+def naver_price_url(code):
+    return f'https://stock.naver.com/domestic/stock/{code}/price'
+
+
+def quote_targets(state):
+    """리포트 8종목과 사용자가 보유로 저장한 종목을 합친다."""
+    targets = dict(REPORT_WATCHLIST)
+    for stock in state.get('stocks', []):
+        code = str(stock.get('code', ''))
+        if stock.get('kind') == '보유' and re.fullmatch(r'\\d{6}', code):
+            targets[code] = stock.get('name') or targets.get(code) or code
+    return tuple(sorted(targets.items(), key=lambda item: (item[0] not in REPORT_WATCHLIST, item[1])))
+
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def latest_closes(targets):
+    """공공데이터포털 최신 종가만 표시한다. 네이버 화면을 자동 수집하지 않는다."""
+    provider = Official()
+    rows, failures = [], []
+    for code, saved_name in targets:
+        try:
+            price, price_day, official_name = provider.price(code, date.today())
+            rows.append({'종목': official_name or saved_name, '코드': code, '최신 종가(원)': price,
+                         '기준일': price_day})
+        except DataError as exc:
+            failures.append(f'{saved_name}: {exc}')
+    return rows, failures
+
+
+def render_quote_panel(state):
+    targets = quote_targets(state)
+    rows, failures = latest_closes(targets)
+    st.subheader('0. 최신 종가 · 네이버증권 확인')
+    st.caption('표의 가격은 공공데이터포털 최신 영업일 종가입니다. 장중 가격·등락률은 아래 링크에서 네이버증권 원문으로 확인하세요.')
+    if rows:
+        st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
+                     column_config={'최신 종가(원)': st.column_config.NumberColumn(format='%d원')})
+        by_code = {row['코드']: row['종목'] for row in rows}
+        selected_code = st.selectbox('네이버증권에서 장중 시세 확인', list(by_code),
+                                     format_func=lambda code: by_code[code] + ' · ' + code,
+                                     key='naver_quote_code')
+        st.link_button('네이버증권 최신 시세 열기', naver_price_url(selected_code), use_container_width=True)
+    else:
+        st.warning('시세를 불러오지 못했습니다. 공공데이터포털 시세 API 연결 상태를 확인해 주세요.')
+    if failures:
+        st.caption('일부 종목은 시세를 확인하지 못했습니다. ' + ' / '.join(failures[:2]))
 
 
 def overview_data(state):
@@ -89,11 +147,12 @@ def review_rows(rows, state, today, price_days, research_days):
 
 
 def render_dashboard(store, state, sample_mode):
-    with st.expander('참고 사이트 스타일 · 시장·차트 샘플 보기', expanded=True):
+    st.title('내 투자 점검 대시보드')
+    st.caption(datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일') + ' · 저장된 자료 기준')
+    render_quote_panel(state)
+    with st.expander('참고 사이트 스타일 · 시장·차트 샘플 보기', expanded=False):
         st.warning('디자인 예시입니다. 아래 점수·시장 수치·종목 가격·차트·브리핑은 가상 샘플이며 실제 투자 판단에 사용하지 마세요.')
         render_decision_dashboard({})
-    st.title('내 투자 점검 대시보드')
-    st.caption(datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일') + ' · 저장된 자료 기준 · 실시간 시세 아님')
     if sample_mode:
         st.info('공개 조사 자료를 볼 수 있습니다. 투자 기록은 현재 접속에서만 유지됩니다.')
     rows, notices = overview_data(state)
