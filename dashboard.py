@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 import pandas as pd
 import streamlit as st
 
+from dashboard_ui import render_decision_dashboard
 from automatic import brief
 from chat_research import published, growth
 
@@ -88,6 +89,9 @@ def review_rows(rows, state, today, price_days, research_days):
 
 
 def render_dashboard(store, state, sample_mode):
+    with st.expander('참고 사이트 스타일 · 시장·차트 샘플 보기', expanded=True):
+        st.warning('디자인 예시입니다. 아래 점수·시장 수치·종목 가격·차트·브리핑은 가상 샘플이며 실제 투자 판단에 사용하지 마세요.')
+        render_decision_dashboard({})
     st.title('내 투자 점검 대시보드')
     st.caption(datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일') + ' · 저장된 자료 기준 · 실시간 시세 아님')
     if sample_mode:
