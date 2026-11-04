@@ -169,6 +169,43 @@ class Official:
                 raise DataError("공공데이터포털 종목 검색 응답을 읽지 못했습니다.") from None
         return []
 
+    def market_index(self, index_name, asof):
+        """Return the latest official KRX-linked index row, never an intraday quote."""
+        if not self.price_key:
+            raise DataError("공공데이터포털 지수시세 API 키가 설정되지 않았습니다.")
+        for days in range(10):
+            target = (asof - timedelta(days=days)).strftime("%Y%m%d")
+            try:
+                payload = get(
+                    "https://apis.data.go.kr/1160100/GetMarketIndexInfoService_V2/getStockMarketIndex_V2",
+                    {"serviceKey": self.price_key, "resultType": "json", "numOfRows": 100,
+                     "basDt": target, "likeIdxNm": index_name},
+                ).json()
+                response = payload["response"]
+                if str(response["header"].get("resultCode")) not in ("00", "0"):
+                    raise DataError("공공데이터포털 지수시세: 지수시세정보 활용신청과 인증키를 확인하세요.")
+                items = (response.get("body", {}).get("items") or {}).get("item", [])
+                if isinstance(items, dict):
+                    items = [items]
+                if not items:
+                    continue
+                row = next((x for x in items if str(x.get("idxNm", "")).upper() == index_name.upper()), items[0])
+                close = number(row.get("clpr"))
+                rate = row.get("fltRt")
+                if close is None:
+                    raise DataError("공공데이터포털 지수시세 응답에 종가가 없습니다.")
+                return {
+                    "name": str(row.get("idxNm") or index_name),
+                    "date": str(row.get("basDt") or target),
+                    "close": close,
+                    "change": number(row.get("vs")),
+                    "rate": str(rate) if rate is not None else None,
+                    "source": "https://www.data.go.kr/data/15094807/openapi.do",
+                }
+            except (ValueError, KeyError, TypeError):
+                raise DataError("공공데이터포털 지수시세 응답을 읽지 못했습니다.") from None
+        raise DataError("최근 10일 내 지수시세를 찾지 못했습니다.")
+
     def price(self, code, asof):
         for days in range(10):
             target = (asof - timedelta(days=days)).strftime("%Y%m%d")
