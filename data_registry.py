@@ -33,7 +33,7 @@ PROVIDERS = (
     ProviderSpec(
         "data_go_kr_stock",
         "금융위원회 주식시세정보",
-        ("stock.search", "stock.quote"),
+        ("stock.search", "stock.quote", "market.index"),
         ("DATA_GO_KR_SERVICE_KEY",),
     ),
 )
