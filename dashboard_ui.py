@@ -183,7 +183,7 @@ def render_decision_dashboard(details: dict) -> None:
     st.markdown('<div class="px-live-divider"><span>저장된 조사 자료 · 기준일 확인</span></div>', unsafe_allow_html=True)
 
 
-def render_live_decision_dashboard(rows: list[dict], notices: list[dict]) -> None:
+def render_live_decision_dashboard(rows: list[dict], notices: list[dict], market_rows: list[dict] | None = None, market_failures: list[str] | None = None) -> None:
     """PlanX first viewport made only from saved, source-bearing research."""
     today = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y년 %m월 %d일")
     total = len(rows)
@@ -260,8 +260,9 @@ def render_live_decision_dashboard(rows: list[dict], notices: list[dict]) -> Non
     st.markdown('<div class="px-live-divider"><span>상세 점검 · 기준일과 원문을 함께 확인</span></div>', unsafe_allow_html=True)
 
 
-def _live_market_strip() -> None:
-    """Top market tape. Values stay blank until a source-bearing market API is connected."""
+def _live_market_strip(market_rows: list[dict]) -> None:
+    """Top market tape. KOSPI/KOSDAQ stay source-dated; unconnected series are never fabricated."""
+    by_label = {str(row.get("label", "")).upper(): row for row in market_rows}
     markets = [
         ("KOSPI", "시장지수 API 연결 필요", "#D64B4B"),
         ("KOSDAQ", "시장지수 API 연결 필요", "#D64B4B"),
@@ -270,11 +271,17 @@ def _live_market_strip() -> None:
         ("GOLD", "원자재 API 연결 필요", "#B9944A"),
     ]
     cols = st.columns(5, gap="small")
-    for col, (label, status, color) in zip(cols, markets):
+    for col, (label, fallback, color) in zip(cols, markets):
+        row = by_label.get(label)
+        close = row.get("close") if row else None
+        value = f"{close:,.2f}" if isinstance(close, (int, float)) else "연결 필요"
+        rate = str(row.get("rate") or "") if row else ""
+        status = (("등락률 " + rate + "% · " + str(row.get("date", ""))) if row and rate else (str(row.get("date", "")) if row else fallback))
+        rate_color = "#D64B4B" if not rate.startswith("-") else "#3677D8"
         with col:
             st.markdown(
                 '<div class="px-ticker"><span>' + html.escape(label) + '</span>'
-                '<strong>연결 필요</strong><em>' + html.escape(status) + '</em>'
+                '<strong>' + html.escape(value) + '</strong><em style="color:' + rate_color + '">' + html.escape(status) + '</em>'
                 '<div class="px-ticker-line" style="--ticker-color:' + color + '"></div></div>',
                 unsafe_allow_html=True,
             )
