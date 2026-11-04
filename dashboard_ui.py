@@ -197,22 +197,8 @@ def render_live_decision_dashboard(rows: list[dict], notices: list[dict]) -> Non
         f'<div class="px-date">{today} · <i></i> 저장된 조사자료 기준</div></div>',
         unsafe_allow_html=True,
     )
-    labels = [
-        ("관심종목", f"{total}개", "저장된 조사 자료"),
-        ("누적 실적", f"{financial_count}개", "동일 기간 비교 가능"),
-        ("평가 근거", f"{valuation_count}개", "출처 있는 범위만 표시"),
-        ("공시 기록", f"{len(notices)}건", "저장된 분석 결과 기준"),
-        ("추가 확인", f"{gap_count}건", "수급·주가·평가 등 미확인"),
-    ]
-    cols = st.columns(5, gap="small")
-    for col, (label, value, note) in zip(cols, labels):
-        with col:
-            st.markdown(
-                f'<div class="px-market px-live-market"><span>{html.escape(label)}</span>'
-                f'<strong>{html.escape(value)}</strong><em>{html.escape(note)}</em></div>',
-                unsafe_allow_html=True,
-            )
-    st.caption("실시간 시장 수치나 투자점수는 표시하지 않습니다. 연결된 공식 데이터와 조사 기준일이 있는 항목만 아래에 표시합니다.")
+    _live_market_strip()
+    st.caption("시장 API가 연결되면 KOSPI·KOSDAQ·환율·원자재의 기준값과 등락률을 표시합니다. 연결 전에는 가상 수치를 넣지 않습니다.")
 
     st.markdown(
         '<div class="px-title-row"><h2>오늘의 투자판단</h2><div>'
@@ -272,3 +258,23 @@ def render_live_decision_dashboard(rows: list[dict], notices: list[dict]) -> Non
         )
         st.markdown('<div class="px-watch px-live-watch">' + watch + '</div>', unsafe_allow_html=True)
     st.markdown('<div class="px-live-divider"><span>상세 점검 · 기준일과 원문을 함께 확인</span></div>', unsafe_allow_html=True)
+
+
+def _live_market_strip() -> None:
+    """Top market tape. Values stay blank until a source-bearing market API is connected."""
+    markets = [
+        ("KOSPI", "시장지수 API 연결 필요", "#D64B4B"),
+        ("KOSDAQ", "시장지수 API 연결 필요", "#D64B4B"),
+        ("USD/KRW", "환율 API 연결 필요", "#3677D8"),
+        ("WTI", "원자재 API 연결 필요", "#D64B4B"),
+        ("GOLD", "원자재 API 연결 필요", "#B9944A"),
+    ]
+    cols = st.columns(5, gap="small")
+    for col, (label, status, color) in zip(cols, markets):
+        with col:
+            st.markdown(
+                '<div class="px-ticker"><span>' + html.escape(label) + '</span>'
+                '<strong>연결 필요</strong><em>' + html.escape(status) + '</em>'
+                '<div class="px-ticker-line" style="--ticker-color:' + color + '"></div></div>',
+                unsafe_allow_html=True,
+            )
