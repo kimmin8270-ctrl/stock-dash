@@ -36,6 +36,20 @@ def quote_targets(state):
 
 
 @st.cache_data(ttl=1800, show_spinner=False)
+def latest_indices():
+    """KOSPI·KOSDAQ are official daily index closes, not intraday values."""
+    provider = Official()
+    rows, failures = [], []
+    for label, query in (("KOSPI", "KOSPI"), ("KOSDAQ", "KOSDAQ")):
+        try:
+            row = provider.market_index(query, date.today())
+            rows.append({**row, "label": label})
+        except DataError as exc:
+            failures.append(f"{label}: {exc}")
+    return rows, failures
+
+
+@st.cache_data(ttl=1800, show_spinner=False)
 def latest_closes(targets):
     """공공데이터포털 최신 종가만 표시한다. 네이버 화면을 자동 수집하지 않는다."""
     provider = Official()
@@ -148,7 +162,7 @@ def review_rows(rows, state, today, price_days, research_days):
 
 def render_dashboard(store, state, sample_mode):
     rows, notices = overview_data(state)
-    render_live_decision_dashboard(rows, notices)
+    market_rows, market_failures = latest_indices()\n    render_live_decision_dashboard(rows, notices, market_rows, market_failures)
     render_quote_panel(state)
     if sample_mode:
         st.info('공개 조사 자료를 볼 수 있습니다. 투자 기록은 현재 접속에서만 유지됩니다.')
