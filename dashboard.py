@@ -7,7 +7,7 @@ import re
 import pandas as pd
 import streamlit as st
 
-from dashboard_ui import render_decision_dashboard
+from dashboard_ui import render_live_decision_dashboard
 from automatic import brief
 from chat_research import published, growth
 from providers import DataError, Official
@@ -147,15 +147,11 @@ def review_rows(rows, state, today, price_days, research_days):
 
 
 def render_dashboard(store, state, sample_mode):
-    st.title('내 투자 점검 대시보드')
-    st.caption(datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일') + ' · 저장된 자료 기준')
+    rows, notices = overview_data(state)
+    render_live_decision_dashboard(rows, notices)
     render_quote_panel(state)
-    with st.expander('참고 사이트 스타일 · 시장·차트 샘플 보기', expanded=False):
-        st.warning('디자인 예시입니다. 아래 점수·시장 수치·종목 가격·차트·브리핑은 가상 샘플이며 실제 투자 판단에 사용하지 마세요.')
-        render_decision_dashboard({})
     if sample_mode:
         st.info('공개 조사 자료를 볼 수 있습니다. 투자 기록은 현재 접속에서만 유지됩니다.')
-    rows, notices = overview_data(state)
     cols = st.columns(4)
     cols[0].metric('비교 종목', len(rows))
     cols[1].metric('누적 실적 확인', sum(bool(r['_research'].get('financial')) for r in rows))
