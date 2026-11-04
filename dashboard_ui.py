@@ -181,3 +181,94 @@ def render_decision_dashboard(details: dict) -> None:
     _bottom_cards()
     st.markdown('''<div class="px-education"><div><b>교육자료</b><span>차트 기초 · 기술적 분석 · 투자 전략</span></div><div class="px-pens"><i></i><i></i><i></i><i></i></div><small>차트에 직접 그려보며 학습해보세요.</small></div>''', unsafe_allow_html=True)
     st.markdown('<div class="px-live-divider"><span>저장된 조사 자료 · 기준일 확인</span></div>', unsafe_allow_html=True)
+
+
+def render_live_decision_dashboard(rows: list[dict], notices: list[dict]) -> None:
+    """PlanX first viewport made only from saved, source-bearing research."""
+    today = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y년 %m월 %d일")
+    total = len(rows)
+    financial_count = sum(bool(row.get("_research", {}).get("financial")) for row in rows)
+    valuation_count = sum(bool(row.get("_research", {}).get("valuation")) for row in rows)
+    gap_count = sum(len(row.get("_research", {}).get("data_gaps", [])) for row in rows)
+    stale_count = sum(str(row.get("조사일", "")) in ("", "확인 필요") for row in rows)
+    st.markdown(
+        '<div class="px-topline"><div><span>PlanX</span><b>STOCK INTELLIGENCE</b>'
+        '<small>공식 자료를 근거로 투자 판단을 정리합니다</small></div>'
+        f'<div class="px-date">{today} · <i></i> 저장된 조사자료 기준</div></div>',
+        unsafe_allow_html=True,
+    )
+    labels = [
+        ("관심종목", f"{total}개", "저장된 조사 자료"),
+        ("누적 실적", f"{financial_count}개", "동일 기간 비교 가능"),
+        ("평가 근거", f"{valuation_count}개", "출처 있는 범위만 표시"),
+        ("공시 기록", f"{len(notices)}건", "저장된 분석 결과 기준"),
+        ("추가 확인", f"{gap_count}건", "수급·주가·평가 등 미확인"),
+    ]
+    cols = st.columns(5, gap="small")
+    for col, (label, value, note) in zip(cols, labels):
+        with col:
+            st.markdown(
+                f'<div class="px-market px-live-market"><span>{html.escape(label)}</span>'
+                f'<strong>{html.escape(value)}</strong><em>{html.escape(note)}</em></div>',
+                unsafe_allow_html=True,
+            )
+    st.caption("실시간 시장 수치나 투자점수는 표시하지 않습니다. 연결된 공식 데이터와 조사 기준일이 있는 항목만 아래에 표시합니다.")
+
+    st.markdown(
+        '<div class="px-title-row"><h2>오늘의 투자판단</h2><div>'
+        '<span>시장</span><i>›</i><span>산업</span><i>›</i><span>기업</span><i>›</i><b>투자판단</b>'
+        '</div></div>',
+        unsafe_allow_html=True,
+    )
+    cards = [
+        ("실적 확인", "▥", "기준", f"{financial_count}/{total} 종목", "전년 같은 누적기간의 매출·영업이익만 비교합니다.", [24, 38, 52, 68, 80], GREEN),
+        ("가치 근거", "◇", "기준", f"{valuation_count}/{total} 종목", "출처와 가격 기준일이 함께 있는 범위만 표시합니다.", [20, 32, 46, 58, 72], GOLD),
+        ("공시 기록", "▰", "참고", f"{len(notices)}건 저장", "저장된 공시 제목을 재점검합니다. 실시간 전체 공시는 아닙니다.", [18, 30, 42, 54, 66], GREEN),
+        ("자료 신선도", "◷", "점검", f"{stale_count}개 확인 필요", "조사일·실적기간·공시일을 나누어 확인합니다.", [26, 34, 40, 48, 54], "#8B98A8"),
+        ("미확인 항목", "!", "주의", f"{gap_count}건", "근거가 없는 수급·주가·목표가는 채우지 않습니다.", [58, 52, 46, 38, 30], RED),
+    ]
+    card_cols = st.columns(5, gap="small")
+    for col, args in zip(card_cols, cards):
+        with col:
+            _score_card(*args)
+
+    if not rows:
+        st.markdown('<div class="px-live-divider"><span>기업별 조사 자료</span></div>', unsafe_allow_html=True)
+        st.info("저장된 관심종목 또는 조사 자료가 없습니다. 내 종목에서 종목을 추가해 주세요.")
+        return
+
+    selected = next((row for row in rows if row.get("_research", {}).get("summary")), rows[0])
+    research = selected.get("_research", {})
+    summary = (research.get("summary") or {}).get("text", "핵심 설명을 확인할 수 없습니다.")
+    financial = research.get("financial") or {}
+    price = selected.get("기준 종가(원)")
+    price_text = f"{price:,.0f}원" if isinstance(price, (int, float)) else "기준 종가 미확인"
+    period = financial.get("period", "누적 실적 미확인")
+    st.markdown(
+        '<div class="px-section-head"><div><h3>' + html.escape(str(selected.get("종목", "선택 종목"))) +
+        ' <small>' + html.escape(str(selected.get("코드", ""))) + '</small></h3><strong>' +
+        html.escape(price_text) + '</strong></div><span>조사일 · ' + html.escape(str(selected.get("조사일", "확인 필요"))) +
+        ' / 실적기간 · ' + html.escape(period) + '</span></div>',
+        unsafe_allow_html=True,
+    )
+    left, middle, right = st.columns([1.65, 1, 1], gap="small")
+    with left:
+        st.markdown('<div class="px-panel-title">핵심 요약 <span>공식 출처 기반</span></div>', unsafe_allow_html=True)
+        st.markdown('<div class="px-live-summary">' + html.escape(summary) + '</div>', unsafe_allow_html=True)
+    with middle:
+        st.markdown('<div class="px-panel-title">누적 실적 <span>전년 같은 기간</span></div>', unsafe_allow_html=True)
+        if financial:
+            frame = pd.DataFrame({"구분": [financial["prior_period"], financial["period"]], "매출": [financial["prior_revenue"], financial["revenue"]], "영업이익": [financial["prior_operating_profit"], financial["operating_profit"]]})
+            st.bar_chart(frame.set_index("구분"), color=["#3677D8", "#16804B"])
+        else:
+            st.markdown('<div class="px-live-empty">같은 기간의 누적 실적 원문이 필요합니다.</div>', unsafe_allow_html=True)
+    with right:
+        st.markdown('<div class="px-panel-title">관심종목 <span>저장된 기준일</span></div>', unsafe_allow_html=True)
+        watch = "".join(
+            '<div class="px-watch-row"><span>' + html.escape(str(row.get("종목", ""))) + '</span><b>' +
+            html.escape(f"{row['기준 종가(원)']:,.0f}원" if isinstance(row.get("기준 종가(원)"), (int, float)) else "시세 미확인") +
+            '</b><em>' + html.escape(str(row.get("조사일", "확인 필요"))) + '</em></div>'
+            for row in rows[:6]
+        )
+        st.markdown('<div class="px-watch px-live-watch">' + watch + '</div>', unsafe_allow_html=True)
+    st.markdown('<div class="px-live-divider"><span>상세 점검 · 기준일과 원문을 함께 확인</span></div>', unsafe_allow_html=True)
