@@ -197,8 +197,10 @@ def render_live_decision_dashboard(rows: list[dict], notices: list[dict], market
         f'<div class="px-date">{today} · <i></i> 저장된 조사자료 기준</div></div>',
         unsafe_allow_html=True,
     )
-    _live_market_strip()
-    st.caption("시장 API가 연결되면 KOSPI·KOSDAQ·환율·원자재의 기준값과 등락률을 표시합니다. 연결 전에는 가상 수치를 넣지 않습니다.")
+    _live_market_strip(market_rows or [])
+    if market_failures:
+        st.caption(" / ".join(market_failures[:2]))
+    st.caption("KOSPI·KOSDAQ는 금융위원회 지수시세정보의 최신 기준일 자료입니다. 원/달러·WTI·금은 각각의 공식 API 연결 전에는 가상 수치를 넣지 않습니다.")
 
     st.markdown(
         '<div class="px-title-row"><h2>오늘의 투자판단</h2><div>'
