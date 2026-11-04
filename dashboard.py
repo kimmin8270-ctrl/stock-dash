@@ -162,7 +162,8 @@ def review_rows(rows, state, today, price_days, research_days):
 
 def render_dashboard(store, state, sample_mode):
     rows, notices = overview_data(state)
-    market_rows, market_failures = latest_indices()\n    render_live_decision_dashboard(rows, notices, market_rows, market_failures)
+    market_rows, market_failures = latest_indices()
+    render_live_decision_dashboard(rows, notices, market_rows, market_failures)
     render_quote_panel(state)
     if sample_mode:
         st.info('공개 조사 자료를 볼 수 있습니다. 투자 기록은 현재 접속에서만 유지됩니다.')
